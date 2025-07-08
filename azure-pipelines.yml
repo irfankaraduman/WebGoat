@@ -4,26 +4,23 @@ trigger:
 pool: azure_agent_pool
 
 steps:
-
-# ADIM 1: WebInspect Taramasını Başlat
-# Bu adım, taramayı yapar ve "C:\raporlar2\testazure2.fpr" dosyasını oluşturur.
 - task: PowerShell@2
   displayName: 'WebInspect Taramasını Başlat'
   inputs:
     targetType: 'inline'
     script: |
       Write-Host "WebInspect taraması başlatılıyor..."
-      $process = Start-Process -FilePath "C:\Program Files\Fortify\Fortify WebInspect\WI.exe" -ArgumentList '-u http://zero.webappsecurity.com/ -n "azuretestirfa" -macro "C:\zeroirfan.webmacro" -ep "C:\raporlar2\testazureirfan.fpr" -v' -Wait -PassThru
       
-      $process.StandardOutput | Tee-Object -FilePath "C:\Users\Administrator\Desktop\log.txt"
-      
-      Write-Host "WebInspect işlemi tamamlandı. Çıkış Kodu: $($process.ExitCode)"
-      
-      if ($process.ExitCode -ne 0) {
-        Write-Error "WebInspect taraması başarısız oldu!"
-        exit 1
-      }
+      # Orijinal komutunuz. Çıktıyı hem dosyaya yazar hem de pipeline loguna canlı aktarır.
+      & "C:\Program Files\Fortify\Fortify WebInspect\WI.exe" -u http://zero.webappsecurity.com/ -n "azuretest2" -macro "C:\zeroirfan.webmacro" -ep "C:\raporlar2\testazure2.fpr" -v | Tee-Object -FilePath "C:\Users\Administrator\Desktop\log.txt"
 
+      # === YENİ KISIM: Çıkış kodunu $LASTEXITCODE ile kontrol et ===
+      Write-Host "WebInspect işlemi tamamlandı. Çıkış Kodu: $LASTEXITCODE"
+      
+      if ($LASTEXITCODE -ne 0) {
+        Write-Error "WebInspect taraması başarısız oldu!"
+        exit 1 # $LASTEXITCODE değerini kullanarak pipeline'ı kır
+      }
 # ADIM 2: Python Hata Kontrol Script'ini Çalıştır (KAPI BEKÇİSİ GÖREVİ)
 # Bu adım başarısız olursa (hata bulunursa), pipeline burada durur.
 - script: |
