@@ -99,14 +99,3 @@ if __name__ == "__main__":
     print("="*60)
     sys.exit(0) # Programı "başarılı" durum koduyla sonlandır
 
-Script Nasıl Çalışır?
-
-sys.exit(1): Bu komut, script'i hemen o anda durdurur ve işletim sistemine "Bu program başarısız oldu" mesajını (çıkış kodu 1 ile) gönderir. CI/CD araçları (Jenkins, GitLab CI, Azure DevOps vb.) bu kodu gördüklerinde o adımı (stage/job) başarısız sayar ve pipeline'ı durdurur.
-
-sys.exit(0): Bu komut ise programın normal bir şekilde ve başarıyla tamamlandığını belirtir. Pipeline bu sinyali aldığında bir sonraki adıma geçer.
-
-Hata Kontrol Fonksiyonu (hatalari_kontrol_et_ve_durdur): Bu fonksiyon artık bir liste döndürmüyor. Görevi çok basit: hatalar.txt'deki listeyi al, log dosyasını tara ve ilk eşleşmeyi bulduğu anda sys.exit(1) komutunu çağırarak her şeyi durdur. Eğer döngü biterse ve hiçbir şey bulamazsa, sessizce görevini tamamlar ve program akışına devam eder.
-
-Ana Akış: Programın sonuna kadar hatasız bir şekilde gelinirse, bu, tüm kontrollerin başarıyla geçtiği anlamına gelir. Bu noktada, başarı mesajı ekrana yazdırılır ve sys.exit(0) komutu ile pipeline'ın devam etmesi sağlanır.
-
-Bu yapı, otomasyon ve CI/CD pipeline'ları için standart ve en doğru yaklaşımdır.
