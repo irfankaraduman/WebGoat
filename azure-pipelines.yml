@@ -12,7 +12,7 @@ steps:
       Write-Host "WebInspect taraması başlatılıyor..."
       
       # Orijinal komutunuz. Çıktıyı hem dosyaya yazar hem de pipeline loguna canlı aktarır.
-      & "C:\Program Files\Fortify\Fortify WebInspect\WI.exe" -u http://zero.webappsecurity.com/ -n "azuretest2" -macro "C:\zeroirfan-false.webmacro" -ep "C:\raporlar2\testazure2.fpr" -v | Tee-Object -FilePath "C:\Users\Administrator\Desktop\log.txt"
+      & "C:\Program Files\Fortify\Fortify WebInspect\WI.exe" -u http://zero.webappsecurity.com/ -n "azuretest2" -macro "C:\zeroirfan2.webmacro" -ep "C:\raporlar2\testazure2.fpr" -v | Tee-Object -FilePath "C:\Users\Administrator\Desktop\log.txt"
 
       # === YENİ KISIM: Çıkış kodunu $LASTEXITCODE ile kontrol et ===
       Write-Host "WebInspect işlemi tamamlandı. Çıkış Kodu: $LASTEXITCODE"
