@@ -40,4 +40,4 @@ steps:
       echo Hata bulunmadı. FPR dosyası Fortify SSC'ye yükleniyor...
       
       rem ÖNEMLİ: "-file" parametresinin WebInspect'in oluşturduğu gerçek dosyayı gösterdiğinden emin olun.
-      fortifyclient -url http://192.168.13.177:8080/ssc -authtoken $(FORTIFY_AUTH_TOKEN) uploadFPR -file "C:\raporlar2\testazureirfan.fpr" -project "wi test" -version "witestwithclient"
+      fortifyclient -url http://192.168.13.177:8080/ssc -authtoken e04bd46e-2073-4a7b-8d87-04042fa652b3 uploadFPR -file "C:\raporlar2\testazure2.fpr" -project "wi test" -version "witestwithclient"
