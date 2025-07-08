@@ -34,7 +34,7 @@ def hedef_log_dosyasini_bul(scan_id):
         print(f"HATA: Belirtilen dizin bulunamadı. Lütfen yolu ve Scan ID'yi kontrol edin.")
         return None
     for dosya_adi in os.listdir(hedef_dizin):
-        if dosya_adi.lower().endswith('.txt'):
+        if dosya_adi.lower().endswith('.log'):
             return os.path.join(hedef_dizin, dosya_adi)
     print(f"HATA: '{hedef_dizin}' klasörü içinde .txt uzantılı bir log dosyası bulunamadı.")
     return None
