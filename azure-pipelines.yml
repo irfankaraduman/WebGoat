@@ -23,11 +23,13 @@ steps:
       }
 # ADIM 2: Python Hata Kontrol Script'ini Çalıştır (KAPI BEKÇİSİ GÖREVİ)
 # Bu adım başarısız olursa (hata bulunursa), pipeline burada durur.
-- script: |
+- script: | # DÜZELTME: Fazladan olan '-' karakteri kaldırıldı.
     python --version
-    python script.py
+    python kontrol_scripti.py
   displayName: 'WebInspect Log Hata Kontrolünü Çalıştır'
   workingDirectory: '$(System.DefaultWorkingDirectory)'
+  env:
+    PYTHONIOENCODING: "UTF-8" # Bu satır Unicode hatasını çözmek için doğru.
 
 # ADIM 3: FPR Dosyasını Fortify SSC'ye Yükle (YENİ ADIM)
 # Bu adım SADECE 2. Adım başarılı olursa çalışır.
