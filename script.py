@@ -59,7 +59,7 @@ def hatalari_kontrol_et_ve_durdur(hedef_log_yolu, hatalar_dosyasi):
 
     # 2. Hedef log dosyasının içeriğini oku
     try:
-        with open(hedef_log_yolu, 'r', encoding='utf-16-le') as log_dosyasi:
+        with open(hedef_log_yolu, 'r', encoding='utf-8') as log_dosyasi:
             log_icerigi = log_dosyasi.read()
     except Exception as e:
         print(f"HATA: Hedef log dosyası '{hedef_log_yolu}' okunurken bir sorun oluştu: {e}")
