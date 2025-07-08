@@ -25,7 +25,7 @@ steps:
 # Bu adım başarısız olursa (hata bulunursa), pipeline burada durur.
 - script: | # DÜZELTME: Fazladan olan '-' karakteri kaldırıldı.
     python --version
-    python kontrol_scripti.py
+    python script.py
   displayName: 'WebInspect Log Hata Kontrolünü Çalıştır'
   workingDirectory: '$(System.DefaultWorkingDirectory)'
   env:
