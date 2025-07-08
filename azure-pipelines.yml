@@ -12,7 +12,7 @@ steps:
       Write-Host "WebInspect taraması başlatılıyor..."
       
       # Orijinal komutunuz. Çıktıyı hem dosyaya yazar hem de pipeline loguna canlı aktarır.
-      & "C:\Program Files\Fortify\Fortify WebInspect\WI.exe" -u http://zero.webappsecurity.com/ -n "azuretest2" -macro "C:\zeroirfan-false.webmacro" -ep "C:\raporlar2\testazure3.fpr" -v | Tee-Object -FilePath "C:\Users\Administrator\Desktop\log.txt"
+      & "C:\Program Files\Fortify\Fortify WebInspect\WI.exe" -u http://zero.webappsecurity.com/ -n "azuretest2" -macro "C:\zeroirfan-false.webmacro" -ep "C:\raporlar2\testazure2.fpr" -v | Tee-Object -FilePath "C:\Users\Administrator\Desktop\log.txt"
 
       # === YENİ KISIM: Çıkış kodunu $LASTEXITCODE ile kontrol et ===
       Write-Host "WebInspect işlemi tamamlandı. Çıkış Kodu: $LASTEXITCODE"
@@ -40,4 +40,4 @@ steps:
       echo Hata bulunmadı. FPR dosyası Fortify SSC'ye yükleniyor...
       
       rem ÖNEMLİ: "-file" parametresinin WebInspect'in oluşturduğu gerçek dosyayı gösterdiğinden emin olun.
-      fortifyclient -url http://192.168.13.177:8080/ssc -authtoken e04bd46e-2073-4a7b-8d87-04042fa652b3 uploadFPR -file "C:\raporlar2\testazure3.fpr" -project "wi test" -version "witestwithclient"
+      fortifyclient -url http://192.168.13.177:8080/ssc -authtoken e04bd46e-2073-4a7b-8d87-04042fa652b3 uploadFPR -file "C:\raporlar2\testazure2.fpr" -project "wi test" -version "witestwithclient"
