@@ -3,7 +3,7 @@ trigger:
 
 pool: azure_agent_pool
 
-steps:
+steps:  
 - task: PowerShell@2
   displayName: 'WebInspect Taramasını Başlat'
   inputs:
@@ -25,7 +25,7 @@ steps:
 # Bu adım başarısız olursa (hata bulunursa), pipeline burada durur.
 - script: |
     python --version
-    python kontrol_scripti.py
+    python script.py
   displayName: 'WebInspect Log Hata Kontrolünü Çalıştır'
   workingDirectory: '$(System.DefaultWorkingDirectory)'
 
