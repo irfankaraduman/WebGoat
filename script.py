@@ -1,8 +1,9 @@
 import re
 import os
-import sys  # sys.exit() kullanmak için bu modül gerekli
+import sys
 
 # --- BÖLÜM 1: Scan ID'yi Bulan Fonksiyon (Değişiklik yok) ---
+# ... (Bu fonksiyonun içi zaten dosya_yolu'nu argüman olarak aldığı için doğru) ...
 def scan_id_bul(dosya_yolu):
     """Başlangıç log dosyasından Scan ID'yi bulur."""
     try:
@@ -20,9 +21,11 @@ def scan_id_bul(dosya_yolu):
         print(f"HATA: Başlangıç log dosyası okunurken bir sorun oluştu: {e}")
         return None
 
-# --- BÖLÜM 2: Hedef Log Dosyasını Bulan Fonksiyon (Değişiklik yok) ---
+
+# --- BÖLÜM 2: Hedef Log Dosyasını Bulan Fonksiyon (DÜZELTİLDİ) ---
 def hedef_log_dosyasini_bul(scan_id):
     """Verilen Scan ID'yi kullanarak hedef .txt log dosyasının tam yolunu bulur."""
+    # DÜZELTME: String'in başına 'r' eklendi.
     base_path = r"C:\Users\Administrator\AppData\Local\HP\HP WebInspect\Logs"
     hedef_dizin = os.path.join(base_path, scan_id, "ScanLog")
 
@@ -36,7 +39,8 @@ def hedef_log_dosyasini_bul(scan_id):
     print(f"HATA: '{hedef_dizin}' klasörü içinde .txt uzantılı bir log dosyası bulunamadı.")
     return None
 
-# --- BÖLÜM 3: HATA BULURSA PİPELINE'I KIRAN FONKSİYON (YENİ MANTIK) ---
+# --- BÖLÜM 3: HATA BULURSA PİPELINE'I KIRAN FONKSİYON (Değişiklik yok) ---
+# ... (Bu fonksiyonun içinde sabit dosya yolu yok, bu yüzden doğru) ...
 def hatalari_kontrol_et_ve_durdur(hedef_log_yolu, hatalar_dosyasi):
     """
     Hedef log dosyasında yasaklı bir hata metni bulursa,
@@ -72,30 +76,32 @@ def hatalari_kontrol_et_ve_durdur(hedef_log_yolu, hatalar_dosyasi):
             print("!"*60)
             sys.exit(1) # Programı "başarısız" durum koduyla sonlandır
 
-# --- ANA PROGRAM AKIŞI ---
+# --- ANA PROGRAM AKIŞI (DÜZELTİLDİ) ---
 if __name__ == "__main__":
     print("--- WebInspect Log Hata Kontrol Script'i Başlatıldı ---")
 
-    # Adım 1: log.txt'den Scan ID'yi al !!! yolunu vermek gerek
-    scan_id = scan_id_bul("C:\Users\Administrator\Desktop\log.txt")
+    # Adım 1: log.txt'den Scan ID'yi al
+    # DÜZELTME: String'in başına 'r' eklendi.
+    scan_id = scan_id_bul(r"C:\Users\Administrator\Desktop\log.txt")
     if not scan_id:
-        sys.exit(1) # Fonksiyon zaten hata mesajını yazdı, sadece çıkış yap
+        sys.exit(1)
     print(f"[OK] Scan ID başarıyla bulundu: {scan_id}")
 
     # Adım 2: Scan ID'yi kullanarak hedef log dosyasının yolunu bul
     hedef_log_yolu = hedef_log_dosyasini_bul(scan_id)
     if not hedef_log_yolu:
-        sys.exit(1) # Fonksiyon zaten hata mesajını yazdı, sadece çıkış yap
+        sys.exit(1)
     print(f"[OK] Kontrol edilecek hedef log dosyası bulundu:\n     -> {hedef_log_yolu}")
 
-    # Adım 3: Hataları kontrol et. Eğer hata bulursa fonksiyon programı sonlandıracak.
+    # Adım 3: Hataları kontrol et.
     print("\n[INFO] Kritik hatalar için log dosyası taranıyor...")
+    # DÜZELTME: hatalar.txt dosyasının yolu deponun kök dizininde olmalı
+    # Pipeline'da `workingDirectory` ayarlandığı için sadece "hatalar.txt" yazmak yeterli.
     hatalari_kontrol_et_ve_durdur(hedef_log_yolu, "hatalar.txt")
 
-    # Eğer program bu satıra ulaşabildiyse, hiçbir kritik hata bulunamamıştır.
     print("\n" + "="*60)
     print(">>> BAŞARILI: Log dosyasında belirtilen kritik hatalardan hiçbiri bulunmadı.")
     print(">>> Pipeline başarıyla devam edebilir.")
     print("="*60)
-    sys.exit(0) # Programı "başarılı" durum koduyla sonlandır
+    sys.exit(0)
 
