@@ -1,65 +1,44 @@
-# azure-pipelines.yml
-
 trigger:
-- main  # Veya 'master' gibi ana branch'inizin adı
+- main
 
-# Kendi agent havuzunuzu kullanıyorsunuz, bu doğru. 
-# Bu agent'ta WebInspect kurulu olmalı.
 pool: azure_agent_pool
 
 steps:
 
 # ADIM 1: WebInspect Taramasını Başlat
-# Bu sizin mevcut göreviniz. Tarama bittiğinde log dosyaları oluşmuş olacak.
+# Bu adım, taramayı yapar ve "C:\raporlar2\testazure2.fpr" dosyasını oluşturur.
 - task: PowerShell@2
   displayName: 'WebInspect Taramasını Başlat'
   inputs:
     targetType: 'inline'
     script: |
       Write-Host "WebInspect taraması başlatılıyor..."
-      # Komutunuzun çalışmasını beklemek ve hata kodunu yakalamak için Start-Process kullanmak daha güvenilirdir.
-      $process = Start-Process -FilePath "C:\Program Files\Fortify\Fortify WebInspect\WI.exe" -ArgumentList '-u http://zero.webappsecurity.com/ -n "azuretest3" -macro "C:\zeroirfan.webmacro" -ep "C:\raporlar2\testazure3.fpr" -v' -Wait -PassThru
+      $process = Start-Process -FilePath "C:\Program Files\Fortify\Fortify WebInspect\WI.exe" -ArgumentList '-u http://zero.webappsecurity.com/ -n "azuretestirfa" -macro "C:\zeroirfan.webmacro" -ep "C:\raporlar2\testazureirfan.fpr" -v' -Wait -PassThru
       
-      # WI.exe'den gelen logları ayrıca bir dosyaya yazdır
       $process.StandardOutput | Tee-Object -FilePath "C:\Users\Administrator\Desktop\log.txt"
       
       Write-Host "WebInspect işlemi tamamlandı. Çıkış Kodu: $($process.ExitCode)"
       
-      # WI.exe başarısız olursa pipeline'ı burada kır
       if ($process.ExitCode -ne 0) {
         Write-Error "WebInspect taraması başarısız oldu!"
         exit 1
       }
 
-# ADIM 2: Python Kurulumu
-# Agent'ınızda Python kurulu olsa bile bu adımı eklemek, doğru versiyonun kullanılmasını garantiler.
-- task: UsePythonVersion@0
-  displayName: 'Python 3.9 Kurulumu'
-  inputs:
-    versionSpec: '3.9' # Script'inize uygun versiyonu seçin
-
-# ADIM 3: Python Hata Kontrol Script'ini Çalıştır
-# Bu adım, deponuzdan gelen kontrol_scripti.py'yi çalıştırır.
-# Script'iniz `sys.exit(1)` ile biterse bu adım başarısız olur ve pipeline durur.
+# ADIM 2: Python Hata Kontrol Script'ini Çalıştır (KAPI BEKÇİSİ GÖREVİ)
+# Bu adım başarısız olursa (hata bulunursa), pipeline burada durur.
 - script: |
+    python --version
     python kontrol_scripti.py
   displayName: 'WebInspect Log Hata Kontrolünü Çalıştır'
-  workingDirectory: '$(System.DefaultWorkingDirectory)' # Script ve hatalar.txt'nin bulunduğu klasör
+  workingDirectory: '$(System.DefaultWorkingDirectory)'
 
-# ADIM 4 (İsteğe Bağlı ama Önerilir): Logları Artifact Olarak Yayınla
-# Pipeline başarısız olsa bile log dosyalarına erişebilmek için bu adımı ekleyin.
-- task: PublishPipelineArtifact@1
-  displayName: 'Log Dosyalarını Yayınla'
-  condition: always() # Bu adım, önceki adımlar başarısız olsa bile çalışır.
+# ADIM 3: FPR Dosyasını Fortify SSC'ye Yükle (YENİ ADIM)
+# Bu adım SADECE 2. Adım başarılı olursa çalışır.
+- task: CmdLine@2
+  displayName: 'Fortify SSC ye FPR Yükle'
   inputs:
-    targetPath: 'C:\Users\Administrator\Desktop\log.txt'
-    artifact: 'InitialScanLog'
-    publishLocation: 'Container'
-
-- task: PublishPipelineArtifact@1
-  displayName: 'Detaylı WebInspect Log Klasörünü Yayınla'
-  condition: always()
-  inputs:
-    targetPath: 'C:\Users\Administrator\AppData\Local\HP\HP WebInspect\Logs'
-    artifact: 'WebInspectDetailedLogs'
-    publishLocation: 'Container'
+    script: |
+      echo Hata bulunmadı. FPR dosyası Fortify SSC'ye yükleniyor...
+      
+      rem ÖNEMLİ: "-file" parametresinin WebInspect'in oluşturduğu gerçek dosyayı gösterdiğinden emin olun.
+      fortifyclient -url http://192.168.13.177:8080/ssc -authtoken $(FORTIFY_AUTH_TOKEN) uploadFPR -file "C:\raporlar2\testazureirfan.fpr" -project "wi test" -version "witestwithclient"
