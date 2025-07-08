@@ -76,8 +76,8 @@ def hatalari_kontrol_et_ve_durdur(hedef_log_yolu, hatalar_dosyasi):
 if __name__ == "__main__":
     print("--- WebInspect Log Hata Kontrol Script'i Başlatıldı ---")
 
-    # Adım 1: log.txt'den Scan ID'yi al
-    scan_id = scan_id_bul("log.txt")
+    # Adım 1: log.txt'den Scan ID'yi al !!! yolunu vermek gerek
+    scan_id = scan_id_bul("C:\Users\Administrator\Desktop\log.txt")
     if not scan_id:
         sys.exit(1) # Fonksiyon zaten hata mesajını yazdı, sadece çıkış yap
     print(f"[OK] Scan ID başarıyla bulundu: {scan_id}")
