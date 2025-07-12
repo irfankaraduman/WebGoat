@@ -1,0 +1,51 @@
+trigger:
+- main
+
+pool: azure_agent_pool
+
+steps:  
+- task: PowerShell@2
+  displayName: 'WebInspect Taramasını Başlat'
+  inputs:
+    targetType: 'inline'
+    script: |
+      Write-Host "WebInspect taraması başlatılıyor..."
+      
+      # Orijinal komutunuz. Çıktıyı hem dosyaya yazar hem de pipeline loguna canlı aktarır.
+      & "C:\Program Files\Fortify\Fortify WebInspect\WI.exe" -u http://zero.webappsecurity.com/ -n "azuretest2" -macro "C:\zeroirfan2.webmacro" -ep "C:\raporlar2\testazure2.fpr" -v | Tee-Object -FilePath "C:\Users\Administrator\Desktop\log.txt"
+
+      # === YENİ KISIM: Çıkış kodunu $LASTEXITCODE ile kontrol et ===
+      Write-Host "WebInspect işlemi tamamlandı. Çıkış Kodu: $LASTEXITCODE"
+      
+      if ($LASTEXITCODE -ne 0) {
+        Write-Error "WebInspect taraması başarısız oldu!"
+        exit 1 # $LASTEXITCODE değerini kullanarak pipeline'ı kır
+      }
+
+- task: PowerShell@2
+  displayName: 'Log Dosyasında Kritik Hataları Kontrol Et'
+  inputs:
+    targetType: 'filePath'
+    
+    # filePath: Repodaki script'in tam yolunu belirtir. 
+    # $(System.DefaultWorkingDirectory) değişkeni reponun kök dizinidir.
+    filePath: '$(System.DefaultWorkingDirectory)/WebInspect-Log-Kontrol.ps1'
+    
+    # arguments: Script'e geçirilecek parametreler.
+    # Tek satırda yazmak, YAML'deki çok satırlı string hatalarını önler.
+    arguments: '-InitialLogPath "$(Build.ArtifactStagingDirectory)/log.txt" -ErrorListPath "$(System.DefaultWorkingDirectory)/hatalar.txt"'
+    
+    # errorActionPreference: PowerShell script'i bir hata (non-zero exit code) ile sonlanırsa
+    # pipeline adımını başarısız olarak işaretler. Bu kritik bir ayardır.
+    errorActionPreference: 'stop'
+
+# ADIM 3: FPR Dosyasını Fortify SSC'ye Yükle (YENİ ADIM)
+# Bu adım SADECE 2. Adım başarılı olursa çalışır.
+- task: CmdLine@2
+  displayName: 'Fortify SSC ye FPR Yükle'
+  inputs:
+    script: |
+      echo Hata bulunmadı. FPR dosyası Fortify SSC'ye yükleniyor...
+      
+      rem ÖNEMLİ: "-file" parametresinin WebInspect'in oluşturduğu gerçek dosyayı gösterdiğinden emin olun.
+      fortifyclient -url http://192.168.13.177:8080/ssc -authtoken e04bd46e-2073-4a7b-8d87-04042fa652b3 uploadFPR -file "C:\raporlar2\testazure2.fpr" -project "wi test" -version "witestwithclient"
