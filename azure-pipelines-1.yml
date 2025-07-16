@@ -34,10 +34,10 @@ variables:
   webinspect.logPath: 'C:\temp\$(webinspect.scanName)_log.txt'
   
   # SSC'deki proje adi, scanName ile ayni olacak sekilde ayarlanmistir.
-  ssc.projectName: '$(webinspect.scanName)'
+  ssc.projectName: 'wi test'
   
   # SSC'deki versiyon adi, yine scanName ile ayni olacak sekilde ayarlanmistir.
-  ssc.projectVersion: '$(webinspect.scanName)'
+  ssc.projectVersion: 'witestwithclient'
 
 steps:  
 - task: PowerShell@2
