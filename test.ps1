@@ -1,11 +1,3 @@
-# Hatalarla karsilasildiginda script'in hemen durmasini saglar.
-$ErrorActionPreference = "Stop"
-
-Write-Host "--- WebInspect Log Hata Kontrol Script'i Baslatildi ---" -ForegroundColor Cyan
-# ==============================================================================
-# BOLUM 1: SCRIPT PARAMETRELERI
-# Pipeline'dan gelen -InitialLogPath ve -ErrorsFilePath argumanlarini alir.
-# ==============================================================================
 param (
     [Parameter(Mandatory=$true)]
     [string]$InitialLogPath, # Bu, 'C:\temp\scan-adi_log.txt' gibi bir yol olacak
@@ -13,6 +5,14 @@ param (
     [Parameter(Mandatory=$true)]
     [string]$ErrorsFilePath  # Bu, '.../hatalar.txt' yolu olacak
 )
+
+# Hatalarla karsilasildiginda script'in hemen durmasini saglar.
+$ErrorActionPreference = "Stop"
+
+# ==============================================================================
+# BOLUM 1: SCRIPT PARAMETRELERI
+# Pipeline'dan gelen -InitialLogPath ve -ErrorsFilePath argumanlarini alir.
+# ==============================================================================
 
 Write-Host "--- WebInspect Log Hata Kontrol Script'i Baslatildi ---" -ForegroundColor Cyan
 Write-Host "Scan ID icin kullanilacak ilk log dosyasi: '$InitialLogPath'" -ForegroundColor Yellow
