@@ -13,10 +13,10 @@ variables:
   webinspect.targetUrl: 'http://zero.webappsecurity.com/'
   
   # Taranin benzersiz adi. Diger tüm yollar ve SSC projesi bu isme göre olusturulacaktir.
-  webinspect.scanName: 'ZeroWebApp-Guvenlik-Taramasi'
+  webinspect.scanName: 'ZeroWebApp-Guvenlik-Taramasi2'
   
   # Tarama icin kullanilacak makro dosyasinin tam yolu.
-  webinspect.macroPath: 'C:\zeroirfan2.webmacro'
+  webinspect.macroPath: 'C:\zeroirfan.webmacro'
 
   # --- Fortify SSC Baglanti Bilgileri ---
   # GUVENLIK NOTU: authToken'i Pipeline Library -> Variable Groups'ta GIZLI olarak saklayin.
