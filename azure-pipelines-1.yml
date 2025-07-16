@@ -1,12 +1,8 @@
 trigger:
 - none
 
-pool:
-  name: azure_agent_pool
-  demands:
-    - npm
-
-
+pool: azure_agent_pool
+  
 # ==============================================================================
 # ANA DEGISKENLER
 # Pipeline'i yonetmek icin SADECE bu degiskenleri degistirmeniz yeterlidir.
@@ -17,7 +13,7 @@ variables:
   webinspect.targetUrl: 'http://zero.webappsecurity.com/'
   
   # Taranin benzersiz adi. Diger tüm yollar ve SSC projesi bu isme göre olusturulacaktir.
-  webinspect.scanName: 'ZeroWebApp-Guvenlik-Taramasi2'
+  webinspect.scanName: 'ZeroWebApp-Guvenlik-Taramasi'
   
   # Tarama icin kullanilacak makro dosyasinin tam yolu.
   webinspect.macroPath: 'C:\zeroirfan.webmacro'
@@ -26,10 +22,6 @@ variables:
   # GUVENLIK NOTU: authToken'i Pipeline Library -> Variable Groups'ta GIZLI olarak saklayin.
   ssc.url: 'http://192.168.13.177:8080/ssc'
   ssc.authToken: 'e04bd46e-2073-4a7b-8d87-04042fa652b3'
-
-  # ==============================================================================
-  # TURETILMIS DEGISKENLER (Otomatik olarak ayarlanir, degistirmenize gerek yoktur)
-  # ==============================================================================
   
   # Rapor (.fpr) dosyasinin yolu, scanName'e gore otomatik olusturulur.
   webinspect.reportPath: 'C:\temp\$(webinspect.scanName).fpr'
