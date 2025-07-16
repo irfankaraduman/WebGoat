@@ -72,7 +72,7 @@ steps:
   condition: succeeded()
   inputs:
     targetType: 'filePath'
-    filePath: '$(System.DefaultWorkingDirectory)/WebInspect-Log-Kontrol.ps1'
+    filePath: '$(System.DefaultWorkingDirectory)/test.ps1'
     
     # Argumanlar, otomatk olusturulan 'webinspect.logPath' degiskenini kullaniyor.
     # DIKKAT: 'WebInspect-Log-Kontrol.ps1' script'inizin '-InitialLogPath' parametresini
