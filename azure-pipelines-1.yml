@@ -16,7 +16,7 @@ variables:
   webinspect.scanName: 'ZeroWebApp-Guvenlik-Taramasi'
   
   # Tarama icin kullanilacak makro dosyasinin tam yolu.
-  webinspect.macroPath: 'C:\zeroirfan.webmacro'
+  webinspect.macroPath: 'C:\zeroirfan2.webmacro'
 
   # --- Fortify SSC Baglanti Bilgileri ---
   # GUVENLIK NOTU: authToken'i Pipeline Library -> Variable Groups'ta GIZLI olarak saklayin.
