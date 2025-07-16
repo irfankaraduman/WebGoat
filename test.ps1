@@ -1,6 +1,3 @@
-# ==============================================================================
-# 1. PARAMETRELERİ AL (BU HEP EN BAŞTA OLMALI)
-# ==============================================================================
 param (
     [Parameter(Mandatory=$true)]
     [string]$InitialLogPath,
@@ -19,8 +16,8 @@ Write-Host "Kullanilacak hata listesi: '$ErrorsFilePath'" -ForegroundColor Yello
 
 
 # ==============================================================================
-# BOLUM 2: Scan ID'yi Bulan Fonksiyon (DEĞİŞİKLİK YOK)
-# ==============================================================================
+#1 Scan ID'yi Bulan Fonksiyon
+
 function Get-ScanIdFromFile {
     param (
         [Parameter(Mandatory=$true)]
@@ -46,8 +43,8 @@ function Get-ScanIdFromFile {
 }
 
 # ==============================================================================
-# BOLUM 3: Hedef Log Dosyalarini Bulan Fonksiyon (GÜNCELLENDİ)
-# Bu fonksiyon, Scan ID'yi kullanarak AppData altindaki TÜM .log dosyalarini bulur.
+#2 Hedef Log Dosyalarini Bulan Fonksiyon 
+# Bu fonksiyon, Scan ID'yi kullanarak AppData altindaki TUM .log dosyalarini bulur.
 # ==============================================================================
 function Get-TargetLogFile {
     param (
@@ -62,7 +59,6 @@ function Get-TargetLogFile {
         return $null
     }
 
-    # <<< DEĞİŞİKLİK 1: Artik ilk dosyayi degil, TÜM .log dosyalarini bulur.
     $logFiles = Get-ChildItem -Path $targetDirectory -Filter "*.log"
     
     if ($logFiles) {
@@ -75,7 +71,7 @@ function Get-TargetLogFile {
 }
 
 # ==============================================================================
-# BOLUM 4: HATA BULURSA PIPELINE'I KIRAN FONKSIYON (DEĞİŞİKLİK YOK)
+#3 HATA BULURSA PIPELINE'I KIRAN FONKSIYON 
 # Bu fonksiyonun mantigi ayni kaldi, cunku tek bir dosyayi kontrol etmesi yeterli.
 # Ana program, bu fonksiyonu her dosya icin ayri ayri cagiracak.
 # ==============================================================================
@@ -110,7 +106,7 @@ function Check-LogForErrorsAndFail {
 }
 
 # ==============================================================================
-# --- ANA PROGRAM AKISI (GÜNCELLENDİ) ---
+# --- ANA PROGRAM AKISI
 # ==============================================================================
 try {
     # Adim 1: Ilk log dosyasindan Scan ID'yi al
@@ -118,13 +114,12 @@ try {
     if (-not $scanId) { exit 1 }
     Write-Host "[OK] Scan ID basariyla bulundu: $scanId" -ForegroundColor Green
 
-    # Adim 2: AppData'daki TÜM hedef log dosyalarinin listesini al
+    # Adim 2: AppData'daki TUM hedef log dosyalarinin listesini al
     $hedefLogDosyalari = Get-TargetLogFile -ScanId $scanId
     if (-not $hedefLogDosyalari) { exit 1 }
     Write-Host "[OK] Kontrol edilecek $(($hedefLogDosyalari).Count) adet hedef log dosyasi bulundu:" -ForegroundColor Green
     $hedefLogDosyalari | ForEach-Object { Write-Host "     -> $_" } # Bulunan dosyalari listele
     
-    # <<< DEĞİŞİKLİK 2: Artık tüm log dosyalarını kontrol etmek için bir DÖNGÜ var.
     # Adim 3: Her bir asil log dosyasinda hatalari kontrol et.
     Write-Host "`n[INFO] Hedef log dosyalari kritik hatalar icin sirayla taraniyor..."
     foreach ($tekLogDosyasi in $hedefLogDosyalari) {
@@ -132,7 +127,7 @@ try {
         Check-LogForErrorsAndFail -TargetLogPath $tekLogDosyasi -ErrorsFilePath $ErrorsFilePath
     }
 
-    # Bu noktaya gelindiyse HİÇBİR dosyada hata bulunmamıştır.
+    # Bu noktaya gelindiyse HICBIR dosyada hata bulunmamistir.
     Write-Host ("`n" + "="*60) -ForegroundColor Green
     Write-Host ">>> BASARILI: Taranan tum log dosyalarinda belirtilen kritik hatalardan hicbiri bulunmadi." -ForegroundColor Green
     Write-Host ">>> Pipeline basariyla devam edebilir." -ForegroundColor Green
