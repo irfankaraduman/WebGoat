@@ -77,7 +77,7 @@ steps:
     # Argumanlar, otomatk olusturulan 'webinspect.logPath' degiskenini kullaniyor.
     # DIKKAT: 'WebInspect-Log-Kontrol.ps1' script'inizin '-InitialLogPath' parametresini
     # dogru sekilde kullandigindan emin olun. Script icindeki sabit yol tanimini kaldirin.
-    arguments: '-InitialLogPath "$(webinspect.logPath)" -ErrorsListPath "$(System.DefaultWorkingDirectory)/hatalar.txt"'
+    arguments: '-InitialLogPath "$(webinspect.logPath)" -ErrorsFilePath "$(System.DefaultWorkingDirectory)/hatalar.txt"'
     
     errorActionPreference: 'stop'
 
