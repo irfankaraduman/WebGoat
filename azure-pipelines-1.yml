@@ -24,10 +24,10 @@ variables:
   ssc.authToken: 'e04bd46e-2073-4a7b-8d87-04042fa652b3'
   
   # Rapor (.fpr) dosyasinin yolu, scanName'e gore otomatik olusturulur.
-  webinspect.reportPath: 'C:\temp\$(webinspect.scanName).fpr'
+  webinspect.reportPath: 'C:\Windows\Temp\$(webinspect.scanName).fpr'
   
   # Log dosyasinin yolu, istediginiz gibi C:\temp altinda ve scanName'e gore olusturulur.
-  webinspect.logPath: 'C:\temp\$(webinspect.scanName)_log.txt'
+  webinspect.logPath: 'C:\Windows\Temp\$(webinspect.scanName)_log.txt'
   
   # SSC'deki proje adi, scanName ile ayni olacak sekilde ayarlanmistir.
   ssc.projectName: 'wi test'
