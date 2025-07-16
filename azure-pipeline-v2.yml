@@ -11,10 +11,10 @@ steps:
     script: |
       Write-Host "WebInspect taraması başlatılıyor..."
       
-      # Orijinal komutunuz. Çıktıyı hem dosyaya yazar hem de pipeline loguna canlı aktarır.
+      
       & "C:\Program Files\Fortify\Fortify WebInspect\WI.exe" -u http://zero.webappsecurity.com/ -n "azuretest2" -macro "C:\zeroirfan.webmacro" -ep "C:\raporlar2\testazure2.fpr" -v | Tee-Object -FilePath "C:\Users\Administrator\Desktop\log.txt"
 
-      # === YENİ KISIM: Çıkış kodunu $LASTEXITCODE ile kontrol et ===
+      #Çıkış kodunu $LASTEXITCODE ile kontrol et ===
       Write-Host "WebInspect işlemi tamamlandı. Çıkış Kodu: $LASTEXITCODE"
       
       if ($LASTEXITCODE -ne 0) {
@@ -39,8 +39,6 @@ steps:
     # pipeline adımını başarısız olarak işaretler. Bu kritik bir ayardır.
     errorActionPreference: 'stop'
 
-# ADIM 3: FPR Dosyasını Fortify SSC'ye Yükle (YENİ ADIM)
-# Bu adım SADECE 2. Adım başarılı olursa çalışır.
 - task: CmdLine@2
   displayName: 'Fortify SSC ye FPR Yükle'
   inputs:
