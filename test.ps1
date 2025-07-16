@@ -1,6 +1,7 @@
 # Hatalarla karsilasildiginda script'in hemen durmasini saglar.
 $ErrorActionPreference = "Stop"
 
+Write-Host "--- WebInspect Log Hata Kontrol Script'i Baslatildi ---" -ForegroundColor Cyan
 # ==============================================================================
 # BOLUM 1: SCRIPT PARAMETRELERI
 # Pipeline'dan gelen -InitialLogPath ve -ErrorsFilePath argumanlarini alir.
