@@ -3,37 +3,31 @@ trigger:
 
 pool: azure_agent_pool
   
-# ==============================================================================
-# ANA DEGISKENLER
-# Pipeline'i yonetmek icin SADECE bu degiskenleri degistirmeniz yeterlidir.
-# ==============================================================================
 variables:
   # --- Temel Tarama Bilgileri ---
   # WebInspect'in tarayacagi hedef URL.
   webinspect.targetUrl: 'http://zero.webappsecurity.com/'
   
-  # Taranin benzersiz adi. Diger tüm yollar ve SSC projesi bu isme göre olusturulacaktir.
+  # Taramanın adi. Diger tüm yollar ve SSC projesi bu isme göre olusturulacaktir.
   webinspect.scanName: 'ZeroWebApp-Guvenlik-Taramasi'
   
-  # Tarama icin kullanilacak makro dosyasinin tam yolu.
+  # Tarama icin kullanılacak makro dosyasinin tam yolu.
   webinspect.macroPath: 'C:\zeroirfan.webmacro'
 
   # --- Fortify SSC Baglanti Bilgileri ---
-  # GUVENLIK NOTU: authToken'i Pipeline Library -> Variable Groups'ta GIZLI olarak saklayin.
   ssc.url: 'http://192.168.13.177:8080/ssc'
   ssc.authToken: 'e04bd46e-2073-4a7b-8d87-04042fa652b3'
   
-  # Rapor (.fpr) dosyasinin yolu, scanName'e gore otomatik olusturulur.
+  # (.fpr) dosyasinin yolu, scanName'e gore otomatik oluşturulur.
   webinspect.reportPath: 'C:\Windows\Temp\$(webinspect.scanName).fpr'
   
-  # Log dosyasinin yolu, istediginiz gibi C:\temp altinda ve scanName'e gore olusturulur.
+  # Log dosyasinin yolu, C:\temp altinda ve scanName'e gore olusturulur.
   webinspect.logPath: 'C:\Windows\Temp\$(webinspect.scanName)_log.txt'
   
-  # SSC'deki proje adi, scanName ile ayni olacak sekilde ayarlanmistir.
   ssc.projectName: 'wi test'
   
-  # SSC'deki versiyon adi, yine scanName ile ayni olacak sekilde ayarlanmistir.
   ssc.projectVersion: 'witestwithclient'
+
 
 steps:  
 - task: PowerShell@2
@@ -46,12 +40,6 @@ steps:
       Write-Host "Tarama Adi: $(webinspect.scanName)"
       Write-Host "Rapor Dosyasi: $(webinspect.reportPath)"
       Write-Host "Log Dosyasi: $(webinspect.logPath)"
-      
-      # Gerekli klasorlerin mevcut oldugundan emin ol (C:\temp)
-      if (-not (Test-Path -Path 'C:\temp')) {
-        New-Item -Path 'C:\temp' -ItemType Directory -Force
-        Write-Host "C:\temp klasoru olusturuldu."
-      }
       
       # Degiskenler kullanilarak komut calistiriliyor
       & "C:\Program Files\Fortify\Fortify WebInspect\WI.exe" -u "$(webinspect.targetUrl)" -n "$(webinspect.scanName)" -macro "$(webinspect.macroPath)" -ep "$(webinspect.reportPath)" -v | Tee-Object -FilePath "$(webinspect.logPath)"
@@ -70,12 +58,11 @@ steps:
     targetType: 'filePath'
     filePath: '$(System.DefaultWorkingDirectory)/test.ps1'
     
-    # Argumanlar, otomatk olusturulan 'webinspect.logPath' degiskenini kullaniyor.
-    # DIKKAT: 'WebInspect-Log-Kontrol.ps1' script'inizin '-InitialLogPath' parametresini
-    # dogru sekilde kullandigindan emin olun. Script icindeki sabit yol tanimini kaldirin.
+    # Argumanlar, otomatik olusturulan 'webinspect.logPath' degiskenini kullaniyor.
     arguments: '-InitialLogPath "$(webinspect.logPath)" -ErrorsFilePath "$(System.DefaultWorkingDirectory)/hatalar.txt"'
     
     errorActionPreference: 'stop'
+
 
 - task: CmdLine@2
   displayName: 'Fortify SSC ye FPR Yükle'
@@ -84,5 +71,4 @@ steps:
     script: |
       echo Hata bulunmadi. FPR dosyasi Fortify SSC'ye yukleniyor...
       
-      rem Degiskenler kullanilarak komut calistiriliyor
       fortifyclient -url "$(ssc.url)" -authtoken "$(ssc.authToken)" uploadFPR -file "$(webinspect.reportPath)" -project "$(ssc.projectName)" -version "$(ssc.projectVersion)"
