@@ -1,7 +1,11 @@
 trigger:
 - none
 
-pool: azure_agent_pool
+pool:
+  name: azure_agent_pool
+  demands:
+    - npm
+
 
 # ==============================================================================
 # ANA DEGISKENLER
