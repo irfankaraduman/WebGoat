@@ -12,7 +12,7 @@ variables:
   webinspect.scanName: 'ZeroWebApp-Guvenlik-Taramasi'
   
   # Tarama icin kullanılacak makro dosyasinin tam yolu.
-  webinspect.macroPath: 'C:\zeroirfan.webmacro'
+  
 
   # --- Fortify SSC Baglanti Bilgileri ---
   ssc.url: 'http://192.168.13.177:8080/ssc'
@@ -42,7 +42,7 @@ steps:
       Write-Host "Log Dosyasi: $(webinspect.logPath)"
       
       # Degiskenler kullanilarak komut calistiriliyor
-      & "C:\Program Files\Fortify\Fortify WebInspect\WI.exe" -u "$(webinspect.targetUrl)" -n "$(webinspect.scanName)" -macro "$(webinspect.macroPath)" -ep "$(webinspect.reportPath)" -v | Tee-Object -FilePath "$(webinspect.logPath)"
+      & "C:\Program Files\Fortify\Fortify WebInspect\WI.exe" -u "$(webinspect.targetUrl)" -n "$(webinspect.scanName)" -ep "$(webinspect.reportPath)" -v | Tee-Object -FilePath "$(webinspect.logPath)"
 
       Write-Host "WebInspect islemi tamamlandi. Cikis Kodu: $LASTEXITCODE"
       
